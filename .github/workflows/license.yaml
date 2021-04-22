@@ -1,0 +1,30 @@
+name: License
+
+on: push
+
+jobs:
+  license-finder:
+    name: License Finder
+    
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - name: Set up License Finder
+        run: sudo gem install license_finder
+
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Cache Maven artifacts
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-maven-artifacts-v1
+        with:
+          path: ~/.m2
+          key: ${{ env.cache-name }}-${{ hashFiles('pom.xml') }}
+          restore-keys: |
+            ${{ env.cache-name }}-${{ hashFiles('pom.xml') }}
+            ${{ env.cache-name }}-
+
+      - name: Check licenses
+        run: license_finder

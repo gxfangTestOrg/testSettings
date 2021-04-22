@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        package-manager: [maven]
+        package-manager: [npm, maven, gradle, composer, gomodules]
 
     runs-on: ubuntu-20.04
 
@@ -18,6 +18,16 @@ jobs:
 
       - name: Check out repository
         uses: actions/checkout@v2
+
+      - if: ${{ matrix.package-manager == 'npm' }}
+        name: Install Node modules
+        working-directory: npm
+        run: npm ci
+
+      - if: ${{ matrix.package-manager == 'composer' }}
+        name: Install PHP packages
+        working-directory: composer
+        run: composer install
 
       - name: Check licenses
         run: |

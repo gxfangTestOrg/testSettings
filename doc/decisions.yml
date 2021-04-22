@@ -2,7 +2,7 @@
 - - :inherit_from
   - "./doc/use-without-redistribution-decisions.yml"
 - - :approve
-  - license-finder-examples
+  - testSettings
   - :who: 
     :why: In npm, a check of the License Finder will include the product itself.
     :versions: []

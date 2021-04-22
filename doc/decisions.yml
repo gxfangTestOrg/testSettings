@@ -1,0 +1,9 @@
+---
+- - :inherit_from
+  - "./doc/use-without-redistribution-decisions.yml"
+- - :approve
+  - license-finder-examples
+  - :who: 
+    :why: In npm, a check of the License Finder will include the product itself.
+    :versions: []
+    :when: 2020-12-17 05:05:28.568706400 Z

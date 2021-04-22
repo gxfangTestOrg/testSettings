@@ -5,9 +5,13 @@ on: push
 jobs:
   license-finder:
     name: License Finder
-    
+
+    strategy:
+      matrix:
+        package-manager: [npm, maven, gradle, composer, gomodules]
+
     runs-on: ubuntu-20.04
-    
+
     steps:
       - name: Set up License Finder
         run: sudo gem install license_finder
@@ -15,16 +19,18 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: Cache Maven artifacts
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-maven-artifacts-v1
-        with:
-          path: ~/.m2
-          key: ${{ env.cache-name }}-${{ hashFiles('pom.xml') }}
-          restore-keys: |
-            ${{ env.cache-name }}-${{ hashFiles('pom.xml') }}
-            ${{ env.cache-name }}-
+      - if: ${{ matrix.package-manager == 'npm' }}
+        name: Install Node modules
+        working-directory: npm
+        run: npm ci
+
+      - if: ${{ matrix.package-manager == 'composer' }}
+        name: Install PHP packages
+        working-directory: composer
+        run: composer install
 
       - name: Check licenses
-        run: license_finder
+        run: |
+          license_finder \
+            --project-path=${{ matrix.package-manager }} \
+            --decisions-file=LicenseFinder/doc/decisions.yml
